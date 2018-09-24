@@ -1,0 +1,5 @@
+config.js
+notes.txt
+*.pem
+node_modules
+DS_Store
