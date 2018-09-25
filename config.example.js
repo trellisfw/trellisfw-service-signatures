@@ -1,4 +1,10 @@
 module.exports = {
   api: 'https://a.trellis.api.here',
-  token: '1234567'
+  tokensFile: './tokens.json',
+  key: {
+    public: './keys/public.pub',
+    private: './keys/private.pem',
+    info: './keys/key.json'
+  },
+  interval: 30 //seconds
 }
