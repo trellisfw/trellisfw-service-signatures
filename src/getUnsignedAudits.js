@@ -4,7 +4,7 @@ const config = require('../config.js')
 const _ = require('lodash');
 const Promise = require('bluebird');
 
-function getUnsignedAudits() {
+function getUnsignedAudits({token}) {
   /*
     Get /bookmarks/certifications
   */
@@ -13,7 +13,7 @@ function getUnsignedAudits() {
     method: 'GET',
     url: config.api+'/bookmarks/certifications',
     headers: {
-      Authorization: 'Bearer '+config.token
+      Authorization: 'Bearer '+token
     }
   }).then((response) => {
     //Extract only list of certification ids
@@ -23,7 +23,7 @@ function getUnsignedAudits() {
         method: 'GET',
         url: config.api+'/bookmarks/certifications/'+key+'/audit',
         headers: {
-          Authorization: 'Bearer '+config.token
+          Authorization: 'Bearer '+token
         }
       }).then((response) => {
         var signatures = _.get(response, 'data.signatures');
