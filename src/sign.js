@@ -12,7 +12,8 @@ function sign({doc, token}) {
     var headers = { kid, alg, kty, typ, jku };
     if (jku) headers.jku = jku;
     if (pubJwk) headers.jwk = pubJwk;
-    return tsig.generate(doc, prvJwk, headers).then((signatures) => {
+    //Remove _id, _rev, and _meta from the doc when signing/verifying
+    return tsig.generate(_.omit(doc, ['_id', '_rev', '_meta']), prvJwk, headers).then((signatures) => {
       debug('Signing doc:', doc._id);
       return axios({
         method: 'PUT',

@@ -7,6 +7,8 @@ const Promise = require('bluebird');
 function getUnsignedDocs({token}) {
   /*
     Get /bookmarks/certifications
+
+    Return all docs (audits and certificates) that do not have any signatures.
   */
   var docs = [];
   return axios({
@@ -20,10 +22,10 @@ function getUnsignedDocs({token}) {
     var certKeys = _.filter(Object.keys(response.data), key=>(_.startsWith(key, '_')===false));
     return Promise.map(certKeys, (key) => {
       return Promise.join(
-        //Add certification to list if it isn't signed.
+        //Add certificate to list if it isn't signed.
         axios({
           method: 'GET',
-          url: config.api+'/bookmarks/certifications/'+key,
+          url: config.api+'/bookmarks/certifications/'+key+'/certificate',
           headers: {
             Authorization: 'Bearer '+token
           }
@@ -33,7 +35,7 @@ function getUnsignedDocs({token}) {
             docs.push(response.data);
           }
         }).catch((err) => {
-          debug('Failed to load certification', key);
+          debug('Failed to load certificate for certification:', key);
         }),
         //Add audit to list if it isn't signed.
         axios({
@@ -48,18 +50,19 @@ function getUnsignedDocs({token}) {
             docs.push(response.data);
           }
         }).catch((err) => {
-          debug('Failed to load audit', key);
+          debug('Failed to load audit for certification:', key);
         }),
       );
     }, {concurrency: 5});
   }).then(() => {
     return docs;
   }).catch((error) => {
-    if (error.response.status == 404) {
-      debug('Certifications resource does not exist.')
+    if (_.get(error, 'response.status') == 404) {
+      debug('Certifications resource does not exist for token:', token);
       return [];
     } else {
-      throw error;
+      debug('Failed to load certifications for token:', token, 'Error:', error);
+      return [];
     }
   })
 }

@@ -11,7 +11,6 @@ function run() {
   //Load tokens
   return Promise.map(tokens.getAll(), (token) => {
     return getUnsignedDocs({token}).then((unsignedDocs) => {
-      //Check if it has a signature
       debug(unsignedDocs.length, 'docs need signatures.');
       return Promise.map(unsignedDocs, (doc) => {
         return sign({doc, token});
