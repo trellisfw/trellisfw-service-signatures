@@ -4,3 +4,5 @@ notes.txt
 node_modules
 .DS_Store
 tokens.json
+test/config.js
+yarn.lock
