@@ -27,6 +27,7 @@ module.exports = async function makeCertification(audit, certificate, certificat
       type: 'application/vnd.trellis.certifications.1+json'
     })
     _id = postRes.headers.location.replace(/^\//, '')
+    var certifications_id = _id;
     var putRes = await oadaRequest({
       method: 'put',
       url: 'https://api.trellis.one/bookmarks/certifications',
@@ -88,5 +89,5 @@ module.exports = async function makeCertification(audit, certificate, certificat
   } catch(error) {
     console.log(error);
   }
-  return {certification_id, audit_id, certificate_id}
+  return {certifications_id, certification_id, audit_id, certificate_id}
 }
